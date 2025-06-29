@@ -5,6 +5,7 @@ from fastapi.responses import StreamingResponse
 import io
 from pydantic import BaseModel, model_validator
 import json
+from fastapi.middleware.cors import CORSMiddleware
 
 class ThreshSettings(BaseModel):
     single_channel: bool
@@ -31,6 +32,22 @@ class MorphSettings(BaseModel):
         return value
     
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",  # React dev server
+    "https://your-frontend.onrender.com",  # deployed React frontend (if any)
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,              # Only allow listed origins
+    allow_credentials=True,
+    allow_methods=["*"],                # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],                # Allow all headers
+)
+
+
+
 @app.post("/thresh-image/")
 async def process_image(settings:ThreshSettings=Body(...),file:UploadFile = File(...)):
     contents = await file.read()
