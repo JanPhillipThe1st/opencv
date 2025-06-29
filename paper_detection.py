@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # read image
-img = cv2.imread("./images/photo_mini.jpg")
+img = cv2.imread("./images/photo_tilted.jpg")
 
 # convert img to grayscale
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -21,7 +21,7 @@ morph = cv2.morphologyEx(morph, cv2.MORPH_OPEN, kernel)
 # get largest contour
 contours = cv2.findContours(morph, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 contours = contours[0] if len(contours) == 2 else contours[1]
-area_thresh = 0
+area_thresh = 5
 for c in contours:
     area = cv2.contourArea(c)
     if area > area_thresh:
